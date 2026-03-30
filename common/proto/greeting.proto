@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "ignis/common/proto";
+
+service GreetingService {
+  rpc Greet(GreetRequest) returns (GreetResponse);
+}
+
+message GreetRequest {
+  string sender  = 1;
+  string message = 2;
+}
+
+message GreetResponse {
+  string reply = 1;
+}
