@@ -1,0 +1,34 @@
+syntax = "proto3";
+option go_package = "ignis/common/proto";
+
+service IgnisService {
+  rpc Greet(GreetRequest) returns (GreetResponse);
+  rpc Work(WorkRequest) returns (WorkResponse);
+  rpc Stop(StopRequest) returns (StopResponse);
+}
+
+message GreetRequest {
+  string sender  = 1;
+  string message = 2;
+}
+
+message GreetResponse {
+  string reply = 1;
+}
+
+message WorkRequest {
+  string sender = 1;
+}
+
+message WorkResponse {
+  string ack = 1;
+  string workerId = 2;
+}
+
+message StopRequest {
+  string workerId = 1;
+}
+
+message StopResponse {
+  string ack = 1;
+}

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	pb "ignis/common/proto"
 	"ignis/common/processor"
+	pb "ignis/common/proto"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -18,7 +18,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := pb.NewGreetingServiceClient(conn)
+	client := pb.NewIgnisServiceClient(conn)
 
 	cp := processor.NewCommandProcessor()
 
