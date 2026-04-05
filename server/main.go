@@ -4,22 +4,31 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"sync"
 
 	pb "ignis/common/proto"
 
-	"google.golang.org/grpc"
-
 	"github.com/google/uuid"
+	"google.golang.org/grpc"
 )
+
+type providerConn struct {
+	workerId string
+	jobChan  chan *pb.JobAssignment
+}
 
 type IgnisServer struct {
 	pb.UnimplementedIgnisServiceServer
-	availableWorkers map[string]struct{}
+
+	mu         sync.Mutex
+	providers  map[string]*providerConn
+	jobResults map[string]string
 }
 
 func NewIgnisServer() *IgnisServer {
 	return &IgnisServer{
-		availableWorkers: make(map[string]struct{}),
+		providers:  make(map[string]*providerConn),
+		jobResults: make(map[string]string),
 	}
 }
 
@@ -28,23 +37,81 @@ func (s *IgnisServer) Greet(_ context.Context, req *pb.GreetRequest) (*pb.GreetR
 	return &pb.GreetResponse{Reply: "Hello, " + req.Sender + "!"}, nil
 }
 
-func (s *IgnisServer) Work(_ context.Context, req *pb.WorkRequest) (*pb.WorkResponse, error) {
-	fmt.Printf("[%s]: Work Request\n", req.Sender)
-	var newWorkerId string = uuid.New().String()
-	s.availableWorkers[newWorkerId] = struct{}{}
-	fmt.Printf("[%s]: Added New Worker\n", newWorkerId)
-	return &pb.WorkResponse{Ack: "ACK " + req.Sender + " Work Request", WorkerId: newWorkerId}, nil
+func (s *IgnisServer) Subscribe(req *pb.SubscribeRequest, stream pb.IgnisService_SubscribeServer) error {
+	workerId := uuid.New().String()
+	conn := &providerConn{
+		workerId: workerId,
+		jobChan:  make(chan *pb.JobAssignment, 10),
+	}
+
+	s.mu.Lock()
+	s.providers[workerId] = conn
+	s.mu.Unlock()
+	fmt.Printf("[%s]: Provider subscribed\n", workerId)
+
+	for {
+		select {
+		case job := <-conn.jobChan:
+			if err := stream.Send(job); err != nil {
+				s.removeProvider(workerId)
+				return err
+			}
+		case <-stream.Context().Done():
+			s.removeProvider(workerId)
+			fmt.Printf("[%s]: Provider disconnected\n", workerId)
+			return nil
+		}
+	}
 }
 
-func (s *IgnisServer) Stop(_ context.Context, req *pb.StopRequest) (*pb.StopResponse, error) {
-	fmt.Printf("[%s]: Work Request\n", req.WorkerId)
-	_, exists := s.availableWorkers[req.WorkerId]
-	if exists {
-		delete(s.availableWorkers, req.WorkerId)
-		fmt.Printf("[%s]: Removed Worker\n", req.WorkerId)
-		return &pb.StopResponse{Ack: "ACK " + req.WorkerId + " Stop Request"}, nil
+func (s *IgnisServer) Unsubscribe(_ context.Context, req *pb.UnsubscribeRequest) (*pb.UnsubscribeResponse, error) {
+	s.removeProvider(req.WorkerId)
+	fmt.Printf("[%s]: Provider unsubscribed\n", req.WorkerId)
+	return &pb.UnsubscribeResponse{Ack: "ACK " + req.WorkerId}, nil
+}
+
+func (s *IgnisServer) removeProvider(workerId string) {
+	s.mu.Lock()
+	delete(s.providers, workerId)
+	s.mu.Unlock()
+}
+
+func (s *IgnisServer) Job(_ context.Context, req *pb.JobRequest) (*pb.JobResponse, error) {
+	s.mu.Lock()
+	var target *providerConn
+	for _, p := range s.providers {
+		target = p
+		break
 	}
-	return nil, fmt.Errorf("worker not found")
+	s.mu.Unlock()
+
+	if target == nil {
+		return nil, fmt.Errorf("no providers available")
+	}
+
+	jobId := uuid.New().String()
+	target.jobChan <- &pb.JobAssignment{
+		JobId:     jobId,
+		ModelName: req.ModelName,
+		InputText: req.InputText,
+	}
+	fmt.Printf("[job:%s] Dispatched to provider:%s\n", jobId, target.workerId)
+	return &pb.JobResponse{JobId: jobId}, nil
+}
+
+func (s *IgnisServer) SubmitResult(_ context.Context, req *pb.SubmitResultRequest) (*pb.SubmitResultResponse, error) {
+	s.mu.Lock()
+	s.jobResults[req.JobId] = req.Output
+	s.mu.Unlock()
+	fmt.Printf("[job:%s] Result received\n", req.JobId)
+	return &pb.SubmitResultResponse{Ack: "ACK result for " + req.JobId}, nil
+}
+
+func (s *IgnisServer) GetResult(_ context.Context, req *pb.GetResultRequest) (*pb.GetResultResponse, error) {
+	s.mu.Lock()
+	output, ready := s.jobResults[req.JobId]
+	s.mu.Unlock()
+	return &pb.GetResultResponse{Ready: ready, Output: output}, nil
 }
 
 func main() {

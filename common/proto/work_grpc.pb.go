@@ -19,9 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	IgnisService_Greet_FullMethodName = "/IgnisService/Greet"
-	IgnisService_Work_FullMethodName  = "/IgnisService/Work"
-	IgnisService_Stop_FullMethodName  = "/IgnisService/Stop"
+	IgnisService_Greet_FullMethodName        = "/IgnisService/Greet"
+	IgnisService_Subscribe_FullMethodName    = "/IgnisService/Subscribe"
+	IgnisService_Unsubscribe_FullMethodName  = "/IgnisService/Unsubscribe"
+	IgnisService_Job_FullMethodName          = "/IgnisService/Job"
+	IgnisService_SubmitResult_FullMethodName = "/IgnisService/SubmitResult"
+	IgnisService_GetResult_FullMethodName    = "/IgnisService/GetResult"
 )
 
 // IgnisServiceClient is the client API for IgnisService service.
@@ -29,8 +32,11 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type IgnisServiceClient interface {
 	Greet(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetResponse, error)
-	Work(ctx context.Context, in *WorkRequest, opts ...grpc.CallOption) (*WorkResponse, error)
-	Stop(ctx context.Context, in *StopRequest, opts ...grpc.CallOption) (*StopResponse, error)
+	Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[JobAssignment], error)
+	Unsubscribe(ctx context.Context, in *UnsubscribeRequest, opts ...grpc.CallOption) (*UnsubscribeResponse, error)
+	Job(ctx context.Context, in *JobRequest, opts ...grpc.CallOption) (*JobResponse, error)
+	SubmitResult(ctx context.Context, in *SubmitResultRequest, opts ...grpc.CallOption) (*SubmitResultResponse, error)
+	GetResult(ctx context.Context, in *GetResultRequest, opts ...grpc.CallOption) (*GetResultResponse, error)
 }
 
 type ignisServiceClient struct {
@@ -51,20 +57,59 @@ func (c *ignisServiceClient) Greet(ctx context.Context, in *GreetRequest, opts .
 	return out, nil
 }
 
-func (c *ignisServiceClient) Work(ctx context.Context, in *WorkRequest, opts ...grpc.CallOption) (*WorkResponse, error) {
+func (c *ignisServiceClient) Subscribe(ctx context.Context, in *SubscribeRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[JobAssignment], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(WorkResponse)
-	err := c.cc.Invoke(ctx, IgnisService_Work_FullMethodName, in, out, cOpts...)
+	stream, err := c.cc.NewStream(ctx, &IgnisService_ServiceDesc.Streams[0], IgnisService_Subscribe_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[SubscribeRequest, JobAssignment]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type IgnisService_SubscribeClient = grpc.ServerStreamingClient[JobAssignment]
+
+func (c *ignisServiceClient) Unsubscribe(ctx context.Context, in *UnsubscribeRequest, opts ...grpc.CallOption) (*UnsubscribeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UnsubscribeResponse)
+	err := c.cc.Invoke(ctx, IgnisService_Unsubscribe_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *ignisServiceClient) Stop(ctx context.Context, in *StopRequest, opts ...grpc.CallOption) (*StopResponse, error) {
+func (c *ignisServiceClient) Job(ctx context.Context, in *JobRequest, opts ...grpc.CallOption) (*JobResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(StopResponse)
-	err := c.cc.Invoke(ctx, IgnisService_Stop_FullMethodName, in, out, cOpts...)
+	out := new(JobResponse)
+	err := c.cc.Invoke(ctx, IgnisService_Job_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ignisServiceClient) SubmitResult(ctx context.Context, in *SubmitResultRequest, opts ...grpc.CallOption) (*SubmitResultResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SubmitResultResponse)
+	err := c.cc.Invoke(ctx, IgnisService_SubmitResult_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *ignisServiceClient) GetResult(ctx context.Context, in *GetResultRequest, opts ...grpc.CallOption) (*GetResultResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetResultResponse)
+	err := c.cc.Invoke(ctx, IgnisService_GetResult_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,8 +121,11 @@ func (c *ignisServiceClient) Stop(ctx context.Context, in *StopRequest, opts ...
 // for forward compatibility.
 type IgnisServiceServer interface {
 	Greet(context.Context, *GreetRequest) (*GreetResponse, error)
-	Work(context.Context, *WorkRequest) (*WorkResponse, error)
-	Stop(context.Context, *StopRequest) (*StopResponse, error)
+	Subscribe(*SubscribeRequest, grpc.ServerStreamingServer[JobAssignment]) error
+	Unsubscribe(context.Context, *UnsubscribeRequest) (*UnsubscribeResponse, error)
+	Job(context.Context, *JobRequest) (*JobResponse, error)
+	SubmitResult(context.Context, *SubmitResultRequest) (*SubmitResultResponse, error)
+	GetResult(context.Context, *GetResultRequest) (*GetResultResponse, error)
 	mustEmbedUnimplementedIgnisServiceServer()
 }
 
@@ -91,11 +139,20 @@ type UnimplementedIgnisServiceServer struct{}
 func (UnimplementedIgnisServiceServer) Greet(context.Context, *GreetRequest) (*GreetResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Greet not implemented")
 }
-func (UnimplementedIgnisServiceServer) Work(context.Context, *WorkRequest) (*WorkResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Work not implemented")
+func (UnimplementedIgnisServiceServer) Subscribe(*SubscribeRequest, grpc.ServerStreamingServer[JobAssignment]) error {
+	return status.Error(codes.Unimplemented, "method Subscribe not implemented")
 }
-func (UnimplementedIgnisServiceServer) Stop(context.Context, *StopRequest) (*StopResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Stop not implemented")
+func (UnimplementedIgnisServiceServer) Unsubscribe(context.Context, *UnsubscribeRequest) (*UnsubscribeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Unsubscribe not implemented")
+}
+func (UnimplementedIgnisServiceServer) Job(context.Context, *JobRequest) (*JobResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Job not implemented")
+}
+func (UnimplementedIgnisServiceServer) SubmitResult(context.Context, *SubmitResultRequest) (*SubmitResultResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SubmitResult not implemented")
+}
+func (UnimplementedIgnisServiceServer) GetResult(context.Context, *GetResultRequest) (*GetResultResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetResult not implemented")
 }
 func (UnimplementedIgnisServiceServer) mustEmbedUnimplementedIgnisServiceServer() {}
 func (UnimplementedIgnisServiceServer) testEmbeddedByValue()                      {}
@@ -136,38 +193,85 @@ func _IgnisService_Greet_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _IgnisService_Work_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WorkRequest)
+func _IgnisService_Subscribe_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(SubscribeRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(IgnisServiceServer).Subscribe(m, &grpc.GenericServerStream[SubscribeRequest, JobAssignment]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type IgnisService_SubscribeServer = grpc.ServerStreamingServer[JobAssignment]
+
+func _IgnisService_Unsubscribe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UnsubscribeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IgnisServiceServer).Work(ctx, in)
+		return srv.(IgnisServiceServer).Unsubscribe(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: IgnisService_Work_FullMethodName,
+		FullMethod: IgnisService_Unsubscribe_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IgnisServiceServer).Work(ctx, req.(*WorkRequest))
+		return srv.(IgnisServiceServer).Unsubscribe(ctx, req.(*UnsubscribeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _IgnisService_Stop_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StopRequest)
+func _IgnisService_Job_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(JobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IgnisServiceServer).Stop(ctx, in)
+		return srv.(IgnisServiceServer).Job(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: IgnisService_Stop_FullMethodName,
+		FullMethod: IgnisService_Job_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IgnisServiceServer).Stop(ctx, req.(*StopRequest))
+		return srv.(IgnisServiceServer).Job(ctx, req.(*JobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IgnisService_SubmitResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SubmitResultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IgnisServiceServer).SubmitResult(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IgnisService_SubmitResult_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IgnisServiceServer).SubmitResult(ctx, req.(*SubmitResultRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _IgnisService_GetResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResultRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IgnisServiceServer).GetResult(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: IgnisService_GetResult_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IgnisServiceServer).GetResult(ctx, req.(*GetResultRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -184,14 +288,28 @@ var IgnisService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _IgnisService_Greet_Handler,
 		},
 		{
-			MethodName: "Work",
-			Handler:    _IgnisService_Work_Handler,
+			MethodName: "Unsubscribe",
+			Handler:    _IgnisService_Unsubscribe_Handler,
 		},
 		{
-			MethodName: "Stop",
-			Handler:    _IgnisService_Stop_Handler,
+			MethodName: "Job",
+			Handler:    _IgnisService_Job_Handler,
+		},
+		{
+			MethodName: "SubmitResult",
+			Handler:    _IgnisService_SubmitResult_Handler,
+		},
+		{
+			MethodName: "GetResult",
+			Handler:    _IgnisService_GetResult_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Subscribe",
+			Handler:       _IgnisService_Subscribe_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "common/proto/work.proto",
 }

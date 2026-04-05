@@ -2,9 +2,21 @@ syntax = "proto3";
 option go_package = "ignis/common/proto";
 
 service IgnisService {
-  rpc Greet(GreetRequest) returns (GreetResponse);
-  rpc Work(WorkRequest) returns (WorkResponse);
-  rpc Stop(StopRequest) returns (StopResponse);
+  rpc Greet(GreetRequest)               returns (GreetResponse);
+  rpc Subscribe(SubscribeRequest)       returns (stream JobAssignment);
+  rpc Unsubscribe(UnsubscribeRequest)   returns (UnsubscribeResponse);
+  rpc Job(JobRequest)                   returns (JobResponse);
+  rpc SubmitResult(SubmitResultRequest) returns (SubmitResultResponse);
+  rpc GetResult(GetResultRequest)       returns (GetResultResponse);
+}
+
+enum TaskType {
+  TASK_TYPE_UNSPECIFIED = 0;
+  AI_INFERENCE          = 1;
+  AI_TRAINING           = 2;
+  RENDERING_3D          = 3;
+  SCIENTIFIC_COMPUTE    = 4;
+  VIDEO_PROCESSING      = 5;
 }
 
 message GreetRequest {
@@ -16,19 +28,52 @@ message GreetResponse {
   string reply = 1;
 }
 
-message WorkRequest {
+message SubscribeRequest {
   string sender = 1;
 }
 
-message WorkResponse {
-  string ack = 1;
-  string workerId = 2;
-}
-
-message StopRequest {
+message SubscribeResponse {
   string workerId = 1;
 }
 
-message StopResponse {
+message UnsubscribeRequest {
+  string workerId = 1;
+}
+
+message UnsubscribeResponse {
   string ack = 1;
+}
+
+message JobAssignment {
+  string jobId     = 1;
+  string modelName = 2;
+  string inputText = 3;
+}
+
+message JobRequest {
+  TaskType tasktype   = 1;
+  string   modelName  = 2;
+  string   inputText  = 3;
+}
+
+message JobResponse {
+  string jobId = 1;
+}
+
+message SubmitResultRequest {
+  string jobId  = 1;
+  string output = 2;
+}
+
+message SubmitResultResponse {
+  string ack = 1;
+}
+
+message GetResultRequest {
+  string jobId = 1;
+}
+
+message GetResultResponse {
+  bool   ready  = 1;
+  string output = 2;
 }

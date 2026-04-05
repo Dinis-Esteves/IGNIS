@@ -21,6 +21,64 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type TaskType int32
+
+const (
+	TaskType_TASK_TYPE_UNSPECIFIED TaskType = 0
+	TaskType_AI_INFERENCE          TaskType = 1
+	TaskType_AI_TRAINING           TaskType = 2
+	TaskType_RENDERING_3D          TaskType = 3
+	TaskType_SCIENTIFIC_COMPUTE    TaskType = 4
+	TaskType_VIDEO_PROCESSING      TaskType = 5
+)
+
+// Enum value maps for TaskType.
+var (
+	TaskType_name = map[int32]string{
+		0: "TASK_TYPE_UNSPECIFIED",
+		1: "AI_INFERENCE",
+		2: "AI_TRAINING",
+		3: "RENDERING_3D",
+		4: "SCIENTIFIC_COMPUTE",
+		5: "VIDEO_PROCESSING",
+	}
+	TaskType_value = map[string]int32{
+		"TASK_TYPE_UNSPECIFIED": 0,
+		"AI_INFERENCE":          1,
+		"AI_TRAINING":           2,
+		"RENDERING_3D":          3,
+		"SCIENTIFIC_COMPUTE":    4,
+		"VIDEO_PROCESSING":      5,
+	}
+)
+
+func (x TaskType) Enum() *TaskType {
+	p := new(TaskType)
+	*p = x
+	return p
+}
+
+func (x TaskType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (TaskType) Descriptor() protoreflect.EnumDescriptor {
+	return file_common_proto_work_proto_enumTypes[0].Descriptor()
+}
+
+func (TaskType) Type() protoreflect.EnumType {
+	return &file_common_proto_work_proto_enumTypes[0]
+}
+
+func (x TaskType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use TaskType.Descriptor instead.
+func (TaskType) EnumDescriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{0}
+}
+
 type GreetRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Sender        string                 `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
@@ -117,27 +175,27 @@ func (x *GreetResponse) GetReply() string {
 	return ""
 }
 
-type WorkRequest struct {
+type SubscribeRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Sender        string                 `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *WorkRequest) Reset() {
-	*x = WorkRequest{}
+func (x *SubscribeRequest) Reset() {
+	*x = SubscribeRequest{}
 	mi := &file_common_proto_work_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *WorkRequest) String() string {
+func (x *SubscribeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*WorkRequest) ProtoMessage() {}
+func (*SubscribeRequest) ProtoMessage() {}
 
-func (x *WorkRequest) ProtoReflect() protoreflect.Message {
+func (x *SubscribeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_common_proto_work_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -149,92 +207,40 @@ func (x *WorkRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use WorkRequest.ProtoReflect.Descriptor instead.
-func (*WorkRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use SubscribeRequest.ProtoReflect.Descriptor instead.
+func (*SubscribeRequest) Descriptor() ([]byte, []int) {
 	return file_common_proto_work_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *WorkRequest) GetSender() string {
+func (x *SubscribeRequest) GetSender() string {
 	if x != nil {
 		return x.Sender
 	}
 	return ""
 }
 
-type WorkResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Ack           string                 `protobuf:"bytes,1,opt,name=ack,proto3" json:"ack,omitempty"`
-	WorkerId      string                 `protobuf:"bytes,2,opt,name=workerId,proto3" json:"workerId,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *WorkResponse) Reset() {
-	*x = WorkResponse{}
-	mi := &file_common_proto_work_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *WorkResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*WorkResponse) ProtoMessage() {}
-
-func (x *WorkResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_work_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use WorkResponse.ProtoReflect.Descriptor instead.
-func (*WorkResponse) Descriptor() ([]byte, []int) {
-	return file_common_proto_work_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *WorkResponse) GetAck() string {
-	if x != nil {
-		return x.Ack
-	}
-	return ""
-}
-
-func (x *WorkResponse) GetWorkerId() string {
-	if x != nil {
-		return x.WorkerId
-	}
-	return ""
-}
-
-type StopRequest struct {
+type SubscribeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	WorkerId      string                 `protobuf:"bytes,1,opt,name=workerId,proto3" json:"workerId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StopRequest) Reset() {
-	*x = StopRequest{}
-	mi := &file_common_proto_work_proto_msgTypes[4]
+func (x *SubscribeResponse) Reset() {
+	*x = SubscribeResponse{}
+	mi := &file_common_proto_work_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StopRequest) String() string {
+func (x *SubscribeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StopRequest) ProtoMessage() {}
+func (*SubscribeResponse) ProtoMessage() {}
 
-func (x *StopRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_common_proto_work_proto_msgTypes[4]
+func (x *SubscribeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -245,39 +251,83 @@ func (x *StopRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StopRequest.ProtoReflect.Descriptor instead.
-func (*StopRequest) Descriptor() ([]byte, []int) {
-	return file_common_proto_work_proto_rawDescGZIP(), []int{4}
+// Deprecated: Use SubscribeResponse.ProtoReflect.Descriptor instead.
+func (*SubscribeResponse) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *StopRequest) GetWorkerId() string {
+func (x *SubscribeResponse) GetWorkerId() string {
 	if x != nil {
 		return x.WorkerId
 	}
 	return ""
 }
 
-type StopResponse struct {
+type UnsubscribeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkerId      string                 `protobuf:"bytes,1,opt,name=workerId,proto3" json:"workerId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UnsubscribeRequest) Reset() {
+	*x = UnsubscribeRequest{}
+	mi := &file_common_proto_work_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UnsubscribeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UnsubscribeRequest) ProtoMessage() {}
+
+func (x *UnsubscribeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UnsubscribeRequest.ProtoReflect.Descriptor instead.
+func (*UnsubscribeRequest) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UnsubscribeRequest) GetWorkerId() string {
+	if x != nil {
+		return x.WorkerId
+	}
+	return ""
+}
+
+type UnsubscribeResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Ack           string                 `protobuf:"bytes,1,opt,name=ack,proto3" json:"ack,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *StopResponse) Reset() {
-	*x = StopResponse{}
+func (x *UnsubscribeResponse) Reset() {
+	*x = UnsubscribeResponse{}
 	mi := &file_common_proto_work_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *StopResponse) String() string {
+func (x *UnsubscribeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*StopResponse) ProtoMessage() {}
+func (*UnsubscribeResponse) ProtoMessage() {}
 
-func (x *StopResponse) ProtoReflect() protoreflect.Message {
+func (x *UnsubscribeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_common_proto_work_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -289,14 +339,370 @@ func (x *StopResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use StopResponse.ProtoReflect.Descriptor instead.
-func (*StopResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UnsubscribeResponse.ProtoReflect.Descriptor instead.
+func (*UnsubscribeResponse) Descriptor() ([]byte, []int) {
 	return file_common_proto_work_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *StopResponse) GetAck() string {
+func (x *UnsubscribeResponse) GetAck() string {
 	if x != nil {
 		return x.Ack
+	}
+	return ""
+}
+
+type JobAssignment struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobId         string                 `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
+	ModelName     string                 `protobuf:"bytes,2,opt,name=modelName,proto3" json:"modelName,omitempty"`
+	InputText     string                 `protobuf:"bytes,3,opt,name=inputText,proto3" json:"inputText,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *JobAssignment) Reset() {
+	*x = JobAssignment{}
+	mi := &file_common_proto_work_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *JobAssignment) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JobAssignment) ProtoMessage() {}
+
+func (x *JobAssignment) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JobAssignment.ProtoReflect.Descriptor instead.
+func (*JobAssignment) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *JobAssignment) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+func (x *JobAssignment) GetModelName() string {
+	if x != nil {
+		return x.ModelName
+	}
+	return ""
+}
+
+func (x *JobAssignment) GetInputText() string {
+	if x != nil {
+		return x.InputText
+	}
+	return ""
+}
+
+type JobRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tasktype      TaskType               `protobuf:"varint,1,opt,name=tasktype,proto3,enum=TaskType" json:"tasktype,omitempty"`
+	ModelName     string                 `protobuf:"bytes,2,opt,name=modelName,proto3" json:"modelName,omitempty"`
+	InputText     string                 `protobuf:"bytes,3,opt,name=inputText,proto3" json:"inputText,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *JobRequest) Reset() {
+	*x = JobRequest{}
+	mi := &file_common_proto_work_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *JobRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JobRequest) ProtoMessage() {}
+
+func (x *JobRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JobRequest.ProtoReflect.Descriptor instead.
+func (*JobRequest) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *JobRequest) GetTasktype() TaskType {
+	if x != nil {
+		return x.Tasktype
+	}
+	return TaskType_TASK_TYPE_UNSPECIFIED
+}
+
+func (x *JobRequest) GetModelName() string {
+	if x != nil {
+		return x.ModelName
+	}
+	return ""
+}
+
+func (x *JobRequest) GetInputText() string {
+	if x != nil {
+		return x.InputText
+	}
+	return ""
+}
+
+type JobResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobId         string                 `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *JobResponse) Reset() {
+	*x = JobResponse{}
+	mi := &file_common_proto_work_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *JobResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JobResponse) ProtoMessage() {}
+
+func (x *JobResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JobResponse.ProtoReflect.Descriptor instead.
+func (*JobResponse) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *JobResponse) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+type SubmitResultRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobId         string                 `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
+	Output        string                 `protobuf:"bytes,2,opt,name=output,proto3" json:"output,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubmitResultRequest) Reset() {
+	*x = SubmitResultRequest{}
+	mi := &file_common_proto_work_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubmitResultRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitResultRequest) ProtoMessage() {}
+
+func (x *SubmitResultRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitResultRequest.ProtoReflect.Descriptor instead.
+func (*SubmitResultRequest) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *SubmitResultRequest) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+func (x *SubmitResultRequest) GetOutput() string {
+	if x != nil {
+		return x.Output
+	}
+	return ""
+}
+
+type SubmitResultResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ack           string                 `protobuf:"bytes,1,opt,name=ack,proto3" json:"ack,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubmitResultResponse) Reset() {
+	*x = SubmitResultResponse{}
+	mi := &file_common_proto_work_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubmitResultResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitResultResponse) ProtoMessage() {}
+
+func (x *SubmitResultResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitResultResponse.ProtoReflect.Descriptor instead.
+func (*SubmitResultResponse) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SubmitResultResponse) GetAck() string {
+	if x != nil {
+		return x.Ack
+	}
+	return ""
+}
+
+type GetResultRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	JobId         string                 `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetResultRequest) Reset() {
+	*x = GetResultRequest{}
+	mi := &file_common_proto_work_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetResultRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetResultRequest) ProtoMessage() {}
+
+func (x *GetResultRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetResultRequest.ProtoReflect.Descriptor instead.
+func (*GetResultRequest) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *GetResultRequest) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+type GetResultResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Ready         bool                   `protobuf:"varint,1,opt,name=ready,proto3" json:"ready,omitempty"`
+	Output        string                 `protobuf:"bytes,2,opt,name=output,proto3" json:"output,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetResultResponse) Reset() {
+	*x = GetResultResponse{}
+	mi := &file_common_proto_work_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetResultResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetResultResponse) ProtoMessage() {}
+
+func (x *GetResultResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_common_proto_work_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetResultResponse.ProtoReflect.Descriptor instead.
+func (*GetResultResponse) Descriptor() ([]byte, []int) {
+	return file_common_proto_work_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetResultResponse) GetReady() bool {
+	if x != nil {
+		return x.Ready
+	}
+	return false
+}
+
+func (x *GetResultResponse) GetOutput() string {
+	if x != nil {
+		return x.Output
 	}
 	return ""
 }
@@ -310,20 +716,50 @@ const file_common_proto_work_proto_rawDesc = "" +
 	"\x06sender\x18\x01 \x01(\tR\x06sender\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"%\n" +
 	"\rGreetResponse\x12\x14\n" +
-	"\x05reply\x18\x01 \x01(\tR\x05reply\"%\n" +
-	"\vWorkRequest\x12\x16\n" +
-	"\x06sender\x18\x01 \x01(\tR\x06sender\"<\n" +
-	"\fWorkResponse\x12\x10\n" +
-	"\x03ack\x18\x01 \x01(\tR\x03ack\x12\x1a\n" +
-	"\bworkerId\x18\x02 \x01(\tR\bworkerId\")\n" +
-	"\vStopRequest\x12\x1a\n" +
-	"\bworkerId\x18\x01 \x01(\tR\bworkerId\" \n" +
-	"\fStopResponse\x12\x10\n" +
-	"\x03ack\x18\x01 \x01(\tR\x03ack2\x80\x01\n" +
+	"\x05reply\x18\x01 \x01(\tR\x05reply\"*\n" +
+	"\x10SubscribeRequest\x12\x16\n" +
+	"\x06sender\x18\x01 \x01(\tR\x06sender\"/\n" +
+	"\x11SubscribeResponse\x12\x1a\n" +
+	"\bworkerId\x18\x01 \x01(\tR\bworkerId\"0\n" +
+	"\x12UnsubscribeRequest\x12\x1a\n" +
+	"\bworkerId\x18\x01 \x01(\tR\bworkerId\"'\n" +
+	"\x13UnsubscribeResponse\x12\x10\n" +
+	"\x03ack\x18\x01 \x01(\tR\x03ack\"a\n" +
+	"\rJobAssignment\x12\x14\n" +
+	"\x05jobId\x18\x01 \x01(\tR\x05jobId\x12\x1c\n" +
+	"\tmodelName\x18\x02 \x01(\tR\tmodelName\x12\x1c\n" +
+	"\tinputText\x18\x03 \x01(\tR\tinputText\"o\n" +
+	"\n" +
+	"JobRequest\x12%\n" +
+	"\btasktype\x18\x01 \x01(\x0e2\t.TaskTypeR\btasktype\x12\x1c\n" +
+	"\tmodelName\x18\x02 \x01(\tR\tmodelName\x12\x1c\n" +
+	"\tinputText\x18\x03 \x01(\tR\tinputText\"#\n" +
+	"\vJobResponse\x12\x14\n" +
+	"\x05jobId\x18\x01 \x01(\tR\x05jobId\"C\n" +
+	"\x13SubmitResultRequest\x12\x14\n" +
+	"\x05jobId\x18\x01 \x01(\tR\x05jobId\x12\x16\n" +
+	"\x06output\x18\x02 \x01(\tR\x06output\"(\n" +
+	"\x14SubmitResultResponse\x12\x10\n" +
+	"\x03ack\x18\x01 \x01(\tR\x03ack\"(\n" +
+	"\x10GetResultRequest\x12\x14\n" +
+	"\x05jobId\x18\x01 \x01(\tR\x05jobId\"A\n" +
+	"\x11GetResultResponse\x12\x14\n" +
+	"\x05ready\x18\x01 \x01(\bR\x05ready\x12\x16\n" +
+	"\x06output\x18\x02 \x01(\tR\x06output*\x88\x01\n" +
+	"\bTaskType\x12\x19\n" +
+	"\x15TASK_TYPE_UNSPECIFIED\x10\x00\x12\x10\n" +
+	"\fAI_INFERENCE\x10\x01\x12\x0f\n" +
+	"\vAI_TRAINING\x10\x02\x12\x10\n" +
+	"\fRENDERING_3D\x10\x03\x12\x16\n" +
+	"\x12SCIENTIFIC_COMPUTE\x10\x04\x12\x14\n" +
+	"\x10VIDEO_PROCESSING\x10\x052\xb5\x02\n" +
 	"\fIgnisService\x12&\n" +
-	"\x05Greet\x12\r.GreetRequest\x1a\x0e.GreetResponse\x12#\n" +
-	"\x04Work\x12\f.WorkRequest\x1a\r.WorkResponse\x12#\n" +
-	"\x04Stop\x12\f.StopRequest\x1a\r.StopResponseB\x14Z\x12ignis/common/protob\x06proto3"
+	"\x05Greet\x12\r.GreetRequest\x1a\x0e.GreetResponse\x120\n" +
+	"\tSubscribe\x12\x11.SubscribeRequest\x1a\x0e.JobAssignment0\x01\x128\n" +
+	"\vUnsubscribe\x12\x13.UnsubscribeRequest\x1a\x14.UnsubscribeResponse\x12 \n" +
+	"\x03Job\x12\v.JobRequest\x1a\f.JobResponse\x12;\n" +
+	"\fSubmitResult\x12\x14.SubmitResultRequest\x1a\x15.SubmitResultResponse\x122\n" +
+	"\tGetResult\x12\x11.GetResultRequest\x1a\x12.GetResultResponseB\x14Z\x12ignis/common/protob\x06proto3"
 
 var (
 	file_common_proto_work_proto_rawDescOnce sync.Once
@@ -337,27 +773,43 @@ func file_common_proto_work_proto_rawDescGZIP() []byte {
 	return file_common_proto_work_proto_rawDescData
 }
 
-var file_common_proto_work_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_common_proto_work_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_common_proto_work_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_common_proto_work_proto_goTypes = []any{
-	(*GreetRequest)(nil),  // 0: GreetRequest
-	(*GreetResponse)(nil), // 1: GreetResponse
-	(*WorkRequest)(nil),   // 2: WorkRequest
-	(*WorkResponse)(nil),  // 3: WorkResponse
-	(*StopRequest)(nil),   // 4: StopRequest
-	(*StopResponse)(nil),  // 5: StopResponse
+	(TaskType)(0),                // 0: TaskType
+	(*GreetRequest)(nil),         // 1: GreetRequest
+	(*GreetResponse)(nil),        // 2: GreetResponse
+	(*SubscribeRequest)(nil),     // 3: SubscribeRequest
+	(*SubscribeResponse)(nil),    // 4: SubscribeResponse
+	(*UnsubscribeRequest)(nil),   // 5: UnsubscribeRequest
+	(*UnsubscribeResponse)(nil),  // 6: UnsubscribeResponse
+	(*JobAssignment)(nil),        // 7: JobAssignment
+	(*JobRequest)(nil),           // 8: JobRequest
+	(*JobResponse)(nil),          // 9: JobResponse
+	(*SubmitResultRequest)(nil),  // 10: SubmitResultRequest
+	(*SubmitResultResponse)(nil), // 11: SubmitResultResponse
+	(*GetResultRequest)(nil),     // 12: GetResultRequest
+	(*GetResultResponse)(nil),    // 13: GetResultResponse
 }
 var file_common_proto_work_proto_depIdxs = []int32{
-	0, // 0: IgnisService.Greet:input_type -> GreetRequest
-	2, // 1: IgnisService.Work:input_type -> WorkRequest
-	4, // 2: IgnisService.Stop:input_type -> StopRequest
-	1, // 3: IgnisService.Greet:output_type -> GreetResponse
-	3, // 4: IgnisService.Work:output_type -> WorkResponse
-	5, // 5: IgnisService.Stop:output_type -> StopResponse
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0,  // 0: JobRequest.tasktype:type_name -> TaskType
+	1,  // 1: IgnisService.Greet:input_type -> GreetRequest
+	3,  // 2: IgnisService.Subscribe:input_type -> SubscribeRequest
+	5,  // 3: IgnisService.Unsubscribe:input_type -> UnsubscribeRequest
+	8,  // 4: IgnisService.Job:input_type -> JobRequest
+	10, // 5: IgnisService.SubmitResult:input_type -> SubmitResultRequest
+	12, // 6: IgnisService.GetResult:input_type -> GetResultRequest
+	2,  // 7: IgnisService.Greet:output_type -> GreetResponse
+	7,  // 8: IgnisService.Subscribe:output_type -> JobAssignment
+	6,  // 9: IgnisService.Unsubscribe:output_type -> UnsubscribeResponse
+	9,  // 10: IgnisService.Job:output_type -> JobResponse
+	11, // 11: IgnisService.SubmitResult:output_type -> SubmitResultResponse
+	13, // 12: IgnisService.GetResult:output_type -> GetResultResponse
+	7,  // [7:13] is the sub-list for method output_type
+	1,  // [1:7] is the sub-list for method input_type
+	1,  // [1:1] is the sub-list for extension type_name
+	1,  // [1:1] is the sub-list for extension extendee
+	0,  // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_common_proto_work_proto_init() }
@@ -370,13 +822,14 @@ func file_common_proto_work_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_proto_work_proto_rawDesc), len(file_common_proto_work_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   6,
+			NumEnums:      1,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_common_proto_work_proto_goTypes,
 		DependencyIndexes: file_common_proto_work_proto_depIdxs,
+		EnumInfos:         file_common_proto_work_proto_enumTypes,
 		MessageInfos:      file_common_proto_work_proto_msgTypes,
 	}.Build()
 	File_common_proto_work_proto = out.File
