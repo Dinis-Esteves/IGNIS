@@ -12,11 +12,12 @@ service IgnisService {
 
 enum TaskType {
   TASK_TYPE_UNSPECIFIED = 0;
-  AI_INFERENCE          = 1;
+  TEXT_INFERENCE        = 1;
   AI_TRAINING           = 2;
   RENDERING_3D          = 3;
   SCIENTIFIC_COMPUTE    = 4;
   VIDEO_PROCESSING      = 5;
+  SPEECH_RECOGNITION    = 6;
 }
 
 message GreetRequest {
@@ -45,15 +46,20 @@ message UnsubscribeResponse {
 }
 
 message JobAssignment {
-  string jobId     = 1;
-  string modelName = 2;
-  string inputText = 3;
+  string   jobId      = 1;
+  string   modelName  = 2;
+  string   inputData  = 3;
+  TaskType taskType   = 4;
+  string   config     = 5;
+  bytes    inputBytes = 6;
 }
 
 message JobRequest {
-  TaskType tasktype   = 1;
-  string   modelName  = 2;
-  string   inputText  = 3;
+  TaskType tasktype    = 1;
+  string   modelName   = 2;
+  string   inputData   = 3;
+  string   config      = 4;
+  bytes    inputBytes  = 5;
 }
 
 message JobResponse {

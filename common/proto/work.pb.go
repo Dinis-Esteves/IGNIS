@@ -25,30 +25,33 @@ type TaskType int32
 
 const (
 	TaskType_TASK_TYPE_UNSPECIFIED TaskType = 0
-	TaskType_AI_INFERENCE          TaskType = 1
+	TaskType_TEXT_INFERENCE        TaskType = 1
 	TaskType_AI_TRAINING           TaskType = 2
 	TaskType_RENDERING_3D          TaskType = 3
 	TaskType_SCIENTIFIC_COMPUTE    TaskType = 4
 	TaskType_VIDEO_PROCESSING      TaskType = 5
+	TaskType_SPEECH_RECOGNITION    TaskType = 6
 )
 
 // Enum value maps for TaskType.
 var (
 	TaskType_name = map[int32]string{
 		0: "TASK_TYPE_UNSPECIFIED",
-		1: "AI_INFERENCE",
+		1: "TEXT_INFERENCE",
 		2: "AI_TRAINING",
 		3: "RENDERING_3D",
 		4: "SCIENTIFIC_COMPUTE",
 		5: "VIDEO_PROCESSING",
+		6: "SPEECH_RECOGNITION",
 	}
 	TaskType_value = map[string]int32{
 		"TASK_TYPE_UNSPECIFIED": 0,
-		"AI_INFERENCE":          1,
+		"TEXT_INFERENCE":        1,
 		"AI_TRAINING":           2,
 		"RENDERING_3D":          3,
 		"SCIENTIFIC_COMPUTE":    4,
 		"VIDEO_PROCESSING":      5,
+		"SPEECH_RECOGNITION":    6,
 	}
 )
 
@@ -355,7 +358,10 @@ type JobAssignment struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	JobId         string                 `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
 	ModelName     string                 `protobuf:"bytes,2,opt,name=modelName,proto3" json:"modelName,omitempty"`
-	InputText     string                 `protobuf:"bytes,3,opt,name=inputText,proto3" json:"inputText,omitempty"`
+	InputData     string                 `protobuf:"bytes,3,opt,name=inputData,proto3" json:"inputData,omitempty"`
+	TaskType      TaskType               `protobuf:"varint,4,opt,name=taskType,proto3,enum=TaskType" json:"taskType,omitempty"`
+	Config        string                 `protobuf:"bytes,5,opt,name=config,proto3" json:"config,omitempty"`
+	InputBytes    []byte                 `protobuf:"bytes,6,opt,name=inputBytes,proto3" json:"inputBytes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -404,18 +410,41 @@ func (x *JobAssignment) GetModelName() string {
 	return ""
 }
 
-func (x *JobAssignment) GetInputText() string {
+func (x *JobAssignment) GetInputData() string {
 	if x != nil {
-		return x.InputText
+		return x.InputData
 	}
 	return ""
+}
+
+func (x *JobAssignment) GetTaskType() TaskType {
+	if x != nil {
+		return x.TaskType
+	}
+	return TaskType_TASK_TYPE_UNSPECIFIED
+}
+
+func (x *JobAssignment) GetConfig() string {
+	if x != nil {
+		return x.Config
+	}
+	return ""
+}
+
+func (x *JobAssignment) GetInputBytes() []byte {
+	if x != nil {
+		return x.InputBytes
+	}
+	return nil
 }
 
 type JobRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Tasktype      TaskType               `protobuf:"varint,1,opt,name=tasktype,proto3,enum=TaskType" json:"tasktype,omitempty"`
 	ModelName     string                 `protobuf:"bytes,2,opt,name=modelName,proto3" json:"modelName,omitempty"`
-	InputText     string                 `protobuf:"bytes,3,opt,name=inputText,proto3" json:"inputText,omitempty"`
+	InputData     string                 `protobuf:"bytes,3,opt,name=inputData,proto3" json:"inputData,omitempty"`
+	Config        string                 `protobuf:"bytes,4,opt,name=config,proto3" json:"config,omitempty"`
+	InputBytes    []byte                 `protobuf:"bytes,5,opt,name=inputBytes,proto3" json:"inputBytes,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -464,11 +493,25 @@ func (x *JobRequest) GetModelName() string {
 	return ""
 }
 
-func (x *JobRequest) GetInputText() string {
+func (x *JobRequest) GetInputData() string {
 	if x != nil {
-		return x.InputText
+		return x.InputData
 	}
 	return ""
+}
+
+func (x *JobRequest) GetConfig() string {
+	if x != nil {
+		return x.Config
+	}
+	return ""
+}
+
+func (x *JobRequest) GetInputBytes() []byte {
+	if x != nil {
+		return x.InputBytes
+	}
+	return nil
 }
 
 type JobResponse struct {
@@ -724,16 +767,25 @@ const file_common_proto_work_proto_rawDesc = "" +
 	"\x12UnsubscribeRequest\x12\x1a\n" +
 	"\bworkerId\x18\x01 \x01(\tR\bworkerId\"'\n" +
 	"\x13UnsubscribeResponse\x12\x10\n" +
-	"\x03ack\x18\x01 \x01(\tR\x03ack\"a\n" +
+	"\x03ack\x18\x01 \x01(\tR\x03ack\"\xc0\x01\n" +
 	"\rJobAssignment\x12\x14\n" +
 	"\x05jobId\x18\x01 \x01(\tR\x05jobId\x12\x1c\n" +
 	"\tmodelName\x18\x02 \x01(\tR\tmodelName\x12\x1c\n" +
-	"\tinputText\x18\x03 \x01(\tR\tinputText\"o\n" +
+	"\tinputData\x18\x03 \x01(\tR\tinputData\x12%\n" +
+	"\btaskType\x18\x04 \x01(\x0e2\t.TaskTypeR\btaskType\x12\x16\n" +
+	"\x06config\x18\x05 \x01(\tR\x06config\x12\x1e\n" +
+	"\n" +
+	"inputBytes\x18\x06 \x01(\fR\n" +
+	"inputBytes\"\xa7\x01\n" +
 	"\n" +
 	"JobRequest\x12%\n" +
 	"\btasktype\x18\x01 \x01(\x0e2\t.TaskTypeR\btasktype\x12\x1c\n" +
 	"\tmodelName\x18\x02 \x01(\tR\tmodelName\x12\x1c\n" +
-	"\tinputText\x18\x03 \x01(\tR\tinputText\"#\n" +
+	"\tinputData\x18\x03 \x01(\tR\tinputData\x12\x16\n" +
+	"\x06config\x18\x04 \x01(\tR\x06config\x12\x1e\n" +
+	"\n" +
+	"inputBytes\x18\x05 \x01(\fR\n" +
+	"inputBytes\"#\n" +
 	"\vJobResponse\x12\x14\n" +
 	"\x05jobId\x18\x01 \x01(\tR\x05jobId\"C\n" +
 	"\x13SubmitResultRequest\x12\x14\n" +
@@ -745,14 +797,15 @@ const file_common_proto_work_proto_rawDesc = "" +
 	"\x05jobId\x18\x01 \x01(\tR\x05jobId\"A\n" +
 	"\x11GetResultResponse\x12\x14\n" +
 	"\x05ready\x18\x01 \x01(\bR\x05ready\x12\x16\n" +
-	"\x06output\x18\x02 \x01(\tR\x06output*\x88\x01\n" +
+	"\x06output\x18\x02 \x01(\tR\x06output*\xa2\x01\n" +
 	"\bTaskType\x12\x19\n" +
-	"\x15TASK_TYPE_UNSPECIFIED\x10\x00\x12\x10\n" +
-	"\fAI_INFERENCE\x10\x01\x12\x0f\n" +
+	"\x15TASK_TYPE_UNSPECIFIED\x10\x00\x12\x12\n" +
+	"\x0eTEXT_INFERENCE\x10\x01\x12\x0f\n" +
 	"\vAI_TRAINING\x10\x02\x12\x10\n" +
 	"\fRENDERING_3D\x10\x03\x12\x16\n" +
 	"\x12SCIENTIFIC_COMPUTE\x10\x04\x12\x14\n" +
-	"\x10VIDEO_PROCESSING\x10\x052\xb5\x02\n" +
+	"\x10VIDEO_PROCESSING\x10\x05\x12\x16\n" +
+	"\x12SPEECH_RECOGNITION\x10\x062\xb5\x02\n" +
 	"\fIgnisService\x12&\n" +
 	"\x05Greet\x12\r.GreetRequest\x1a\x0e.GreetResponse\x120\n" +
 	"\tSubscribe\x12\x11.SubscribeRequest\x1a\x0e.JobAssignment0\x01\x128\n" +
@@ -792,24 +845,25 @@ var file_common_proto_work_proto_goTypes = []any{
 	(*GetResultResponse)(nil),    // 13: GetResultResponse
 }
 var file_common_proto_work_proto_depIdxs = []int32{
-	0,  // 0: JobRequest.tasktype:type_name -> TaskType
-	1,  // 1: IgnisService.Greet:input_type -> GreetRequest
-	3,  // 2: IgnisService.Subscribe:input_type -> SubscribeRequest
-	5,  // 3: IgnisService.Unsubscribe:input_type -> UnsubscribeRequest
-	8,  // 4: IgnisService.Job:input_type -> JobRequest
-	10, // 5: IgnisService.SubmitResult:input_type -> SubmitResultRequest
-	12, // 6: IgnisService.GetResult:input_type -> GetResultRequest
-	2,  // 7: IgnisService.Greet:output_type -> GreetResponse
-	7,  // 8: IgnisService.Subscribe:output_type -> JobAssignment
-	6,  // 9: IgnisService.Unsubscribe:output_type -> UnsubscribeResponse
-	9,  // 10: IgnisService.Job:output_type -> JobResponse
-	11, // 11: IgnisService.SubmitResult:output_type -> SubmitResultResponse
-	13, // 12: IgnisService.GetResult:output_type -> GetResultResponse
-	7,  // [7:13] is the sub-list for method output_type
-	1,  // [1:7] is the sub-list for method input_type
-	1,  // [1:1] is the sub-list for extension type_name
-	1,  // [1:1] is the sub-list for extension extendee
-	0,  // [0:1] is the sub-list for field type_name
+	0,  // 0: JobAssignment.taskType:type_name -> TaskType
+	0,  // 1: JobRequest.tasktype:type_name -> TaskType
+	1,  // 2: IgnisService.Greet:input_type -> GreetRequest
+	3,  // 3: IgnisService.Subscribe:input_type -> SubscribeRequest
+	5,  // 4: IgnisService.Unsubscribe:input_type -> UnsubscribeRequest
+	8,  // 5: IgnisService.Job:input_type -> JobRequest
+	10, // 6: IgnisService.SubmitResult:input_type -> SubmitResultRequest
+	12, // 7: IgnisService.GetResult:input_type -> GetResultRequest
+	2,  // 8: IgnisService.Greet:output_type -> GreetResponse
+	7,  // 9: IgnisService.Subscribe:output_type -> JobAssignment
+	6,  // 10: IgnisService.Unsubscribe:output_type -> UnsubscribeResponse
+	9,  // 11: IgnisService.Job:output_type -> JobResponse
+	11, // 12: IgnisService.SubmitResult:output_type -> SubmitResultResponse
+	13, // 13: IgnisService.GetResult:output_type -> GetResultResponse
+	8,  // [8:14] is the sub-list for method output_type
+	2,  // [2:8] is the sub-list for method input_type
+	2,  // [2:2] is the sub-list for extension type_name
+	2,  // [2:2] is the sub-list for extension extendee
+	0,  // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_common_proto_work_proto_init() }

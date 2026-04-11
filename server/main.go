@@ -91,9 +91,12 @@ func (s *IgnisServer) Job(_ context.Context, req *pb.JobRequest) (*pb.JobRespons
 
 	jobId := uuid.New().String()
 	target.jobChan <- &pb.JobAssignment{
-		JobId:     jobId,
-		ModelName: req.ModelName,
-		InputText: req.InputText,
+		JobId:      jobId,
+		ModelName:  req.ModelName,
+		InputData:  req.InputData,
+		TaskType:   req.Tasktype,
+		Config:     req.Config,
+		InputBytes: req.InputBytes,
 	}
 	fmt.Printf("[job:%s] Dispatched to provider:%s\n", jobId, target.workerId)
 	return &pb.JobResponse{JobId: jobId}, nil

@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
 
 	"ignis/common/processor"
 	pb "ignis/common/proto"
@@ -36,19 +38,46 @@ func (c *ConsumerClient) registerCommands(cp *processor.CommandProcessor) {
 
 	cp.Register(processor.Command{
 		Name:        "J",
-		Description: "Submit an inference job (e.g. J openai/whisper-base Hello world)",
+		Description: "Submit a job (e.g. J AI_INFERENCE facebook/opt-125m Hello world)",
 		Execute: func(args []string) error {
-			if len(args) < 2 {
-				return fmt.Errorf("usage: J <model_name> <input_text>")
+			if len(args) < 3 {
+				return fmt.Errorf("usage: J <task_type> <model_name> <input_data>")
 			}
-			modelName := args[0]
-			inputText := fmt.Sprintf("%s", joinArgs(args[1:]))
+			taskVal, ok := pb.TaskType_value[args[0]]
+			if !ok {
+				return fmt.Errorf("unknown task type: %s", args[0])
+			}
+			modelName := args[1]
+			remaining := args[2:]
+			var inputData, config string
+			splitAt := -1
+			for i, a := range remaining {
+				if strings.HasPrefix(a, "{") {
+					splitAt = i
+					break
+				}
+			}
+			if splitAt >= 0 {
+				inputData = strings.Join(remaining[:splitAt], " ")
+				config = strings.Join(remaining[splitAt:], " ")
+			} else {
+				inputData = strings.Join(remaining, " ")
+			}
 
-			resp, err := c.client.Job(context.Background(), &pb.JobRequest{
-				Tasktype:  pb.TaskType_AI_INFERENCE,
+			req := &pb.JobRequest{
+				Tasktype:  pb.TaskType(taskVal),
 				ModelName: modelName,
-				InputText: inputText,
-			})
+				InputData: inputData,
+				Config:    config,
+			}
+
+			// if inputData is a file path, send bytes instead
+			if fileBytes, err := os.ReadFile(inputData); err == nil {
+				req.InputBytes = fileBytes
+				req.InputData = ""
+			}
+
+			resp, err := c.client.Job(context.Background(), req)
 			if err != nil {
 				return err
 			}
@@ -81,16 +110,6 @@ func (c *ConsumerClient) registerCommands(cp *processor.CommandProcessor) {
 	})
 }
 
-func joinArgs(args []string) string {
-	result := ""
-	for i, a := range args {
-		if i > 0 {
-			result += " "
-		}
-		result += a
-	}
-	return result
-}
 
 func main() {
 	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))

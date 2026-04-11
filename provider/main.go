@@ -62,7 +62,7 @@ func (p *ProviderClient) registerCommands(cp *processor.CommandProcessor) {
 						p.id = ""
 						return
 					}
-					fmt.Printf("Job received [%s] model:%s\n", job.JobId, job.ModelName)
+					fmt.Printf("Job received [%s] task:%s model:%s\n", job.JobId, job.TaskType, job.ModelName)
 					go p.handleJob(job)
 				}
 			}()
@@ -92,7 +92,27 @@ func (p *ProviderClient) registerCommands(cp *processor.CommandProcessor) {
 }
 
 func (p *ProviderClient) handleJob(job *pb.JobAssignment) {
-	output, err := runInference(job.ModelName, job.InputText)
+	inputData := job.InputData
+
+	var tmpFile string
+	if len(job.InputBytes) > 0 {
+		f, err := os.CreateTemp("", "ignis-input-*")
+		if err != nil {
+			fmt.Printf("Failed to create temp file [%s]: %v\n", job.JobId, err)
+			return
+		}
+		tmpFile = f.Name()
+		defer os.Remove(tmpFile)
+		if _, err := f.Write(job.InputBytes); err != nil {
+			f.Close()
+			fmt.Printf("Failed to write temp file [%s]: %v\n", job.JobId, err)
+			return
+		}
+		f.Close()
+		inputData = tmpFile
+	}
+
+	output, err := runInference(job.TaskType.String(), job.ModelName, inputData, job.Config)
 	if err != nil {
 		fmt.Printf("Inference failed [%s]: %v\n", job.JobId, err)
 		output = fmt.Sprintf("ERROR: %v", err)
@@ -110,14 +130,18 @@ func (p *ProviderClient) handleJob(job *pb.JobAssignment) {
 	fmt.Printf("Result submitted [%s]\n", job.JobId)
 }
 
-func runInference(modelName, inputText string) (string, error) {
+func runInference(taskType, modelName, inputData, config string) (string, error) {
 	dir, _ := os.Getwd()
 	if filepath.Base(dir) == "provider" {
 		dir = filepath.Dir(dir)
 	}
 	python := filepath.Join(dir, "provider", ".venv", "bin", "python3")
 	script := filepath.Join(dir, "provider", "inference.py")
-	cmd := exec.Command(python, script, modelName, inputText)
+	args := []string{script, taskType, modelName, inputData}
+	if config != "" {
+		args = append(args, config)
+	}
+	cmd := exec.Command(python, args...)
 	out, err := cmd.Output()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
