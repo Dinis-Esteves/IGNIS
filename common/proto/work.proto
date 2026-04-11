@@ -12,12 +12,33 @@ service IgnisService {
 
 enum TaskType {
   TASK_TYPE_UNSPECIFIED = 0;
-  TEXT_INFERENCE        = 1;
-  AI_TRAINING           = 2;
-  RENDERING_3D          = 3;
-  SCIENTIFIC_COMPUTE    = 4;
-  VIDEO_PROCESSING      = 5;
-  SPEECH_RECOGNITION    = 6;
+
+  // Audio
+  SPEECH_RECOGNITION    = 1;
+  AUDIO_CLASSIFICATION  = 2;
+  TEXT_TO_SPEECH        = 3;
+  TEXT_TO_AUDIO         = 4;
+  KEYWORD_SPOTTING      = 5;
+
+  // NLP
+  TEXT_INFERENCE        = 10;
+  SUMMARIZATION         = 11;
+  TRANSLATION           = 12;
+  QUESTION_ANSWERING    = 13;
+  TEXT_CLASSIFICATION   = 14;
+  FILL_MASK             = 15;
+
+  // Computer Vision
+  IMAGE_CLASSIFICATION  = 20;
+  OBJECT_DETECTION      = 21;
+  IMAGE_CAPTIONING      = 22;
+  DEPTH_ESTIMATION      = 23;
+  VIDEO_CLASSIFICATION  = 24;
+  IMAGE_SEGMENTATION    = 25;
+
+  // Multimodal
+  VISUAL_QA             = 30;
+  DOCUMENT_QA           = 31;
 }
 
 message GreetRequest {
@@ -83,3 +104,4 @@ message GetResultResponse {
   bool   ready  = 1;
   string output = 2;
 }
+

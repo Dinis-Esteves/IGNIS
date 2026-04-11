@@ -130,6 +130,7 @@ func (p *ProviderClient) handleJob(job *pb.JobAssignment) {
 	fmt.Printf("Result submitted [%s]\n", job.JobId)
 }
 
+
 func runInference(taskType, modelName, inputData, config string) (string, error) {
 	dir, _ := os.Getwd()
 	if filepath.Base(dir) == "provider" {

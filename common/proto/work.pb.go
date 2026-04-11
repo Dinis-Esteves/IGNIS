@@ -25,33 +25,76 @@ type TaskType int32
 
 const (
 	TaskType_TASK_TYPE_UNSPECIFIED TaskType = 0
-	TaskType_TEXT_INFERENCE        TaskType = 1
-	TaskType_AI_TRAINING           TaskType = 2
-	TaskType_RENDERING_3D          TaskType = 3
-	TaskType_SCIENTIFIC_COMPUTE    TaskType = 4
-	TaskType_VIDEO_PROCESSING      TaskType = 5
-	TaskType_SPEECH_RECOGNITION    TaskType = 6
+	// Audio
+	TaskType_SPEECH_RECOGNITION   TaskType = 1
+	TaskType_AUDIO_CLASSIFICATION TaskType = 2
+	TaskType_TEXT_TO_SPEECH       TaskType = 3
+	TaskType_TEXT_TO_AUDIO        TaskType = 4
+	TaskType_KEYWORD_SPOTTING     TaskType = 5
+	// NLP
+	TaskType_TEXT_INFERENCE      TaskType = 10
+	TaskType_SUMMARIZATION       TaskType = 11
+	TaskType_TRANSLATION         TaskType = 12
+	TaskType_QUESTION_ANSWERING  TaskType = 13
+	TaskType_TEXT_CLASSIFICATION TaskType = 14
+	TaskType_FILL_MASK           TaskType = 15
+	// Computer Vision
+	TaskType_IMAGE_CLASSIFICATION TaskType = 20
+	TaskType_OBJECT_DETECTION     TaskType = 21
+	TaskType_IMAGE_CAPTIONING     TaskType = 22
+	TaskType_DEPTH_ESTIMATION     TaskType = 23
+	TaskType_VIDEO_CLASSIFICATION TaskType = 24
+	TaskType_IMAGE_SEGMENTATION   TaskType = 25
+	// Multimodal
+	TaskType_VISUAL_QA   TaskType = 30
+	TaskType_DOCUMENT_QA TaskType = 31
 )
 
 // Enum value maps for TaskType.
 var (
 	TaskType_name = map[int32]string{
-		0: "TASK_TYPE_UNSPECIFIED",
-		1: "TEXT_INFERENCE",
-		2: "AI_TRAINING",
-		3: "RENDERING_3D",
-		4: "SCIENTIFIC_COMPUTE",
-		5: "VIDEO_PROCESSING",
-		6: "SPEECH_RECOGNITION",
+		0:  "TASK_TYPE_UNSPECIFIED",
+		1:  "SPEECH_RECOGNITION",
+		2:  "AUDIO_CLASSIFICATION",
+		3:  "TEXT_TO_SPEECH",
+		4:  "TEXT_TO_AUDIO",
+		5:  "KEYWORD_SPOTTING",
+		10: "TEXT_INFERENCE",
+		11: "SUMMARIZATION",
+		12: "TRANSLATION",
+		13: "QUESTION_ANSWERING",
+		14: "TEXT_CLASSIFICATION",
+		15: "FILL_MASK",
+		20: "IMAGE_CLASSIFICATION",
+		21: "OBJECT_DETECTION",
+		22: "IMAGE_CAPTIONING",
+		23: "DEPTH_ESTIMATION",
+		24: "VIDEO_CLASSIFICATION",
+		25: "IMAGE_SEGMENTATION",
+		30: "VISUAL_QA",
+		31: "DOCUMENT_QA",
 	}
 	TaskType_value = map[string]int32{
 		"TASK_TYPE_UNSPECIFIED": 0,
-		"TEXT_INFERENCE":        1,
-		"AI_TRAINING":           2,
-		"RENDERING_3D":          3,
-		"SCIENTIFIC_COMPUTE":    4,
-		"VIDEO_PROCESSING":      5,
-		"SPEECH_RECOGNITION":    6,
+		"SPEECH_RECOGNITION":    1,
+		"AUDIO_CLASSIFICATION":  2,
+		"TEXT_TO_SPEECH":        3,
+		"TEXT_TO_AUDIO":         4,
+		"KEYWORD_SPOTTING":      5,
+		"TEXT_INFERENCE":        10,
+		"SUMMARIZATION":         11,
+		"TRANSLATION":           12,
+		"QUESTION_ANSWERING":    13,
+		"TEXT_CLASSIFICATION":   14,
+		"FILL_MASK":             15,
+		"IMAGE_CLASSIFICATION":  20,
+		"OBJECT_DETECTION":      21,
+		"IMAGE_CAPTIONING":      22,
+		"DEPTH_ESTIMATION":      23,
+		"VIDEO_CLASSIFICATION":  24,
+		"IMAGE_SEGMENTATION":    25,
+		"VISUAL_QA":             30,
+		"DOCUMENT_QA":           31,
 	}
 )
 
@@ -797,15 +840,29 @@ const file_common_proto_work_proto_rawDesc = "" +
 	"\x05jobId\x18\x01 \x01(\tR\x05jobId\"A\n" +
 	"\x11GetResultResponse\x12\x14\n" +
 	"\x05ready\x18\x01 \x01(\bR\x05ready\x12\x16\n" +
-	"\x06output\x18\x02 \x01(\tR\x06output*\xa2\x01\n" +
+	"\x06output\x18\x02 \x01(\tR\x06output*\xba\x03\n" +
 	"\bTaskType\x12\x19\n" +
-	"\x15TASK_TYPE_UNSPECIFIED\x10\x00\x12\x12\n" +
-	"\x0eTEXT_INFERENCE\x10\x01\x12\x0f\n" +
-	"\vAI_TRAINING\x10\x02\x12\x10\n" +
-	"\fRENDERING_3D\x10\x03\x12\x16\n" +
-	"\x12SCIENTIFIC_COMPUTE\x10\x04\x12\x14\n" +
-	"\x10VIDEO_PROCESSING\x10\x05\x12\x16\n" +
-	"\x12SPEECH_RECOGNITION\x10\x062\xb5\x02\n" +
+	"\x15TASK_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12SPEECH_RECOGNITION\x10\x01\x12\x18\n" +
+	"\x14AUDIO_CLASSIFICATION\x10\x02\x12\x12\n" +
+	"\x0eTEXT_TO_SPEECH\x10\x03\x12\x11\n" +
+	"\rTEXT_TO_AUDIO\x10\x04\x12\x14\n" +
+	"\x10KEYWORD_SPOTTING\x10\x05\x12\x12\n" +
+	"\x0eTEXT_INFERENCE\x10\n" +
+	"\x12\x11\n" +
+	"\rSUMMARIZATION\x10\v\x12\x0f\n" +
+	"\vTRANSLATION\x10\f\x12\x16\n" +
+	"\x12QUESTION_ANSWERING\x10\r\x12\x17\n" +
+	"\x13TEXT_CLASSIFICATION\x10\x0e\x12\r\n" +
+	"\tFILL_MASK\x10\x0f\x12\x18\n" +
+	"\x14IMAGE_CLASSIFICATION\x10\x14\x12\x14\n" +
+	"\x10OBJECT_DETECTION\x10\x15\x12\x14\n" +
+	"\x10IMAGE_CAPTIONING\x10\x16\x12\x14\n" +
+	"\x10DEPTH_ESTIMATION\x10\x17\x12\x18\n" +
+	"\x14VIDEO_CLASSIFICATION\x10\x18\x12\x16\n" +
+	"\x12IMAGE_SEGMENTATION\x10\x19\x12\r\n" +
+	"\tVISUAL_QA\x10\x1e\x12\x0f\n" +
+	"\vDOCUMENT_QA\x10\x1f2\xb5\x02\n" +
 	"\fIgnisService\x12&\n" +
 	"\x05Greet\x12\r.GreetRequest\x1a\x0e.GreetResponse\x120\n" +
 	"\tSubscribe\x12\x11.SubscribeRequest\x1a\x0e.JobAssignment0\x01\x128\n" +
