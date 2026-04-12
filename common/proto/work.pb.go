@@ -26,28 +26,40 @@ type TaskType int32
 const (
 	TaskType_TASK_TYPE_UNSPECIFIED TaskType = 0
 	// Audio
-	TaskType_SPEECH_RECOGNITION   TaskType = 1
-	TaskType_AUDIO_CLASSIFICATION TaskType = 2
-	TaskType_TEXT_TO_SPEECH       TaskType = 3
-	TaskType_TEXT_TO_AUDIO        TaskType = 4
-	TaskType_KEYWORD_SPOTTING     TaskType = 5
+	TaskType_SPEECH_RECOGNITION             TaskType = 1
+	TaskType_AUDIO_CLASSIFICATION           TaskType = 2
+	TaskType_TEXT_TO_SPEECH                 TaskType = 3
+	TaskType_TEXT_TO_AUDIO                  TaskType = 4
+	TaskType_KEYWORD_SPOTTING               TaskType = 5
+	TaskType_ZERO_SHOT_AUDIO_CLASSIFICATION TaskType = 6
 	// NLP
-	TaskType_TEXT_INFERENCE      TaskType = 10
-	TaskType_SUMMARIZATION       TaskType = 11
-	TaskType_TRANSLATION         TaskType = 12
-	TaskType_QUESTION_ANSWERING  TaskType = 13
-	TaskType_TEXT_CLASSIFICATION TaskType = 14
-	TaskType_FILL_MASK           TaskType = 15
+	TaskType_TEXT_INFERENCE           TaskType = 10
+	TaskType_SUMMARIZATION            TaskType = 11
+	TaskType_TRANSLATION              TaskType = 12
+	TaskType_QUESTION_ANSWERING       TaskType = 13
+	TaskType_TEXT_CLASSIFICATION      TaskType = 14
+	TaskType_FILL_MASK                TaskType = 15
+	TaskType_TOKEN_CLASSIFICATION     TaskType = 16
+	TaskType_ZERO_SHOT_CLASSIFICATION TaskType = 17
+	TaskType_TABLE_QUESTION_ANSWERING TaskType = 18
+	TaskType_FEATURE_EXTRACTION       TaskType = 19
 	// Computer Vision
-	TaskType_IMAGE_CLASSIFICATION TaskType = 20
-	TaskType_OBJECT_DETECTION     TaskType = 21
-	TaskType_IMAGE_CAPTIONING     TaskType = 22
-	TaskType_DEPTH_ESTIMATION     TaskType = 23
-	TaskType_VIDEO_CLASSIFICATION TaskType = 24
-	TaskType_IMAGE_SEGMENTATION   TaskType = 25
+	TaskType_IMAGE_CLASSIFICATION           TaskType = 20
+	TaskType_OBJECT_DETECTION               TaskType = 21
+	TaskType_IMAGE_CAPTIONING               TaskType = 22
+	TaskType_DEPTH_ESTIMATION               TaskType = 23
+	TaskType_VIDEO_CLASSIFICATION           TaskType = 24
+	TaskType_IMAGE_SEGMENTATION             TaskType = 25
+	TaskType_ZERO_SHOT_IMAGE_CLASSIFICATION TaskType = 26
+	TaskType_ZERO_SHOT_OBJECT_DETECTION     TaskType = 27
+	TaskType_MASK_GENERATION                TaskType = 28
+	TaskType_IMAGE_FEATURE_EXTRACTION       TaskType = 29
+	TaskType_KEYPOINT_MATCHING              TaskType = 30
 	// Multimodal
-	TaskType_VISUAL_QA   TaskType = 30
-	TaskType_DOCUMENT_QA TaskType = 31
+	TaskType_VISUAL_QA          TaskType = 40
+	TaskType_DOCUMENT_QA        TaskType = 41
+	TaskType_IMAGE_TEXT_TO_TEXT TaskType = 42
+	TaskType_ANY_TO_ANY         TaskType = 43
 )
 
 // Enum value maps for TaskType.
@@ -59,42 +71,66 @@ var (
 		3:  "TEXT_TO_SPEECH",
 		4:  "TEXT_TO_AUDIO",
 		5:  "KEYWORD_SPOTTING",
+		6:  "ZERO_SHOT_AUDIO_CLASSIFICATION",
 		10: "TEXT_INFERENCE",
 		11: "SUMMARIZATION",
 		12: "TRANSLATION",
 		13: "QUESTION_ANSWERING",
 		14: "TEXT_CLASSIFICATION",
 		15: "FILL_MASK",
+		16: "TOKEN_CLASSIFICATION",
+		17: "ZERO_SHOT_CLASSIFICATION",
+		18: "TABLE_QUESTION_ANSWERING",
+		19: "FEATURE_EXTRACTION",
 		20: "IMAGE_CLASSIFICATION",
 		21: "OBJECT_DETECTION",
 		22: "IMAGE_CAPTIONING",
 		23: "DEPTH_ESTIMATION",
 		24: "VIDEO_CLASSIFICATION",
 		25: "IMAGE_SEGMENTATION",
-		30: "VISUAL_QA",
-		31: "DOCUMENT_QA",
+		26: "ZERO_SHOT_IMAGE_CLASSIFICATION",
+		27: "ZERO_SHOT_OBJECT_DETECTION",
+		28: "MASK_GENERATION",
+		29: "IMAGE_FEATURE_EXTRACTION",
+		30: "KEYPOINT_MATCHING",
+		40: "VISUAL_QA",
+		41: "DOCUMENT_QA",
+		42: "IMAGE_TEXT_TO_TEXT",
+		43: "ANY_TO_ANY",
 	}
 	TaskType_value = map[string]int32{
-		"TASK_TYPE_UNSPECIFIED": 0,
-		"SPEECH_RECOGNITION":    1,
-		"AUDIO_CLASSIFICATION":  2,
-		"TEXT_TO_SPEECH":        3,
-		"TEXT_TO_AUDIO":         4,
-		"KEYWORD_SPOTTING":      5,
-		"TEXT_INFERENCE":        10,
-		"SUMMARIZATION":         11,
-		"TRANSLATION":           12,
-		"QUESTION_ANSWERING":    13,
-		"TEXT_CLASSIFICATION":   14,
-		"FILL_MASK":             15,
-		"IMAGE_CLASSIFICATION":  20,
-		"OBJECT_DETECTION":      21,
-		"IMAGE_CAPTIONING":      22,
-		"DEPTH_ESTIMATION":      23,
-		"VIDEO_CLASSIFICATION":  24,
-		"IMAGE_SEGMENTATION":    25,
-		"VISUAL_QA":             30,
-		"DOCUMENT_QA":           31,
+		"TASK_TYPE_UNSPECIFIED":          0,
+		"SPEECH_RECOGNITION":             1,
+		"AUDIO_CLASSIFICATION":           2,
+		"TEXT_TO_SPEECH":                 3,
+		"TEXT_TO_AUDIO":                  4,
+		"KEYWORD_SPOTTING":               5,
+		"ZERO_SHOT_AUDIO_CLASSIFICATION": 6,
+		"TEXT_INFERENCE":                 10,
+		"SUMMARIZATION":                  11,
+		"TRANSLATION":                    12,
+		"QUESTION_ANSWERING":             13,
+		"TEXT_CLASSIFICATION":            14,
+		"FILL_MASK":                      15,
+		"TOKEN_CLASSIFICATION":           16,
+		"ZERO_SHOT_CLASSIFICATION":       17,
+		"TABLE_QUESTION_ANSWERING":       18,
+		"FEATURE_EXTRACTION":             19,
+		"IMAGE_CLASSIFICATION":           20,
+		"OBJECT_DETECTION":               21,
+		"IMAGE_CAPTIONING":               22,
+		"DEPTH_ESTIMATION":               23,
+		"VIDEO_CLASSIFICATION":           24,
+		"IMAGE_SEGMENTATION":             25,
+		"ZERO_SHOT_IMAGE_CLASSIFICATION": 26,
+		"ZERO_SHOT_OBJECT_DETECTION":     27,
+		"MASK_GENERATION":                28,
+		"IMAGE_FEATURE_EXTRACTION":       29,
+		"KEYPOINT_MATCHING":              30,
+		"VISUAL_QA":                      40,
+		"DOCUMENT_QA":                    41,
+		"IMAGE_TEXT_TO_TEXT":             42,
+		"ANY_TO_ANY":                     43,
 	}
 )
 
@@ -840,14 +876,15 @@ const file_common_proto_work_proto_rawDesc = "" +
 	"\x05jobId\x18\x01 \x01(\tR\x05jobId\"A\n" +
 	"\x11GetResultResponse\x12\x14\n" +
 	"\x05ready\x18\x01 \x01(\bR\x05ready\x12\x16\n" +
-	"\x06output\x18\x02 \x01(\tR\x06output*\xba\x03\n" +
+	"\x06output\x18\x02 \x01(\tR\x06output*\x82\x06\n" +
 	"\bTaskType\x12\x19\n" +
 	"\x15TASK_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12SPEECH_RECOGNITION\x10\x01\x12\x18\n" +
 	"\x14AUDIO_CLASSIFICATION\x10\x02\x12\x12\n" +
 	"\x0eTEXT_TO_SPEECH\x10\x03\x12\x11\n" +
 	"\rTEXT_TO_AUDIO\x10\x04\x12\x14\n" +
-	"\x10KEYWORD_SPOTTING\x10\x05\x12\x12\n" +
+	"\x10KEYWORD_SPOTTING\x10\x05\x12\"\n" +
+	"\x1eZERO_SHOT_AUDIO_CLASSIFICATION\x10\x06\x12\x12\n" +
 	"\x0eTEXT_INFERENCE\x10\n" +
 	"\x12\x11\n" +
 	"\rSUMMARIZATION\x10\v\x12\x0f\n" +
@@ -855,14 +892,26 @@ const file_common_proto_work_proto_rawDesc = "" +
 	"\x12QUESTION_ANSWERING\x10\r\x12\x17\n" +
 	"\x13TEXT_CLASSIFICATION\x10\x0e\x12\r\n" +
 	"\tFILL_MASK\x10\x0f\x12\x18\n" +
+	"\x14TOKEN_CLASSIFICATION\x10\x10\x12\x1c\n" +
+	"\x18ZERO_SHOT_CLASSIFICATION\x10\x11\x12\x1c\n" +
+	"\x18TABLE_QUESTION_ANSWERING\x10\x12\x12\x16\n" +
+	"\x12FEATURE_EXTRACTION\x10\x13\x12\x18\n" +
 	"\x14IMAGE_CLASSIFICATION\x10\x14\x12\x14\n" +
 	"\x10OBJECT_DETECTION\x10\x15\x12\x14\n" +
 	"\x10IMAGE_CAPTIONING\x10\x16\x12\x14\n" +
 	"\x10DEPTH_ESTIMATION\x10\x17\x12\x18\n" +
 	"\x14VIDEO_CLASSIFICATION\x10\x18\x12\x16\n" +
-	"\x12IMAGE_SEGMENTATION\x10\x19\x12\r\n" +
-	"\tVISUAL_QA\x10\x1e\x12\x0f\n" +
-	"\vDOCUMENT_QA\x10\x1f2\xb5\x02\n" +
+	"\x12IMAGE_SEGMENTATION\x10\x19\x12\"\n" +
+	"\x1eZERO_SHOT_IMAGE_CLASSIFICATION\x10\x1a\x12\x1e\n" +
+	"\x1aZERO_SHOT_OBJECT_DETECTION\x10\x1b\x12\x13\n" +
+	"\x0fMASK_GENERATION\x10\x1c\x12\x1c\n" +
+	"\x18IMAGE_FEATURE_EXTRACTION\x10\x1d\x12\x15\n" +
+	"\x11KEYPOINT_MATCHING\x10\x1e\x12\r\n" +
+	"\tVISUAL_QA\x10(\x12\x0f\n" +
+	"\vDOCUMENT_QA\x10)\x12\x16\n" +
+	"\x12IMAGE_TEXT_TO_TEXT\x10*\x12\x0e\n" +
+	"\n" +
+	"ANY_TO_ANY\x10+2\xb5\x02\n" +
 	"\fIgnisService\x12&\n" +
 	"\x05Greet\x12\r.GreetRequest\x1a\x0e.GreetResponse\x120\n" +
 	"\tSubscribe\x12\x11.SubscribeRequest\x1a\x0e.JobAssignment0\x01\x128\n" +

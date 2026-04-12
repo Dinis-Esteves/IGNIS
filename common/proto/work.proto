@@ -14,31 +14,43 @@ enum TaskType {
   TASK_TYPE_UNSPECIFIED = 0;
 
   // Audio
-  SPEECH_RECOGNITION    = 1;
-  AUDIO_CLASSIFICATION  = 2;
-  TEXT_TO_SPEECH        = 3;
-  TEXT_TO_AUDIO         = 4;
-  KEYWORD_SPOTTING      = 5;
+  SPEECH_RECOGNITION             = 1;
+  AUDIO_CLASSIFICATION           = 2;
+  TEXT_TO_SPEECH                 = 3;
+  TEXT_TO_AUDIO                  = 4;
+  KEYWORD_SPOTTING               = 5;
+  ZERO_SHOT_AUDIO_CLASSIFICATION = 6;
 
   // NLP
-  TEXT_INFERENCE        = 10;
-  SUMMARIZATION         = 11;
-  TRANSLATION           = 12;
-  QUESTION_ANSWERING    = 13;
-  TEXT_CLASSIFICATION   = 14;
-  FILL_MASK             = 15;
+  TEXT_INFERENCE          = 10;
+  SUMMARIZATION           = 11;
+  TRANSLATION             = 12;
+  QUESTION_ANSWERING      = 13;
+  TEXT_CLASSIFICATION     = 14;
+  FILL_MASK               = 15;
+  TOKEN_CLASSIFICATION    = 16;
+  ZERO_SHOT_CLASSIFICATION = 17;
+  TABLE_QUESTION_ANSWERING = 18;
+  FEATURE_EXTRACTION      = 19;
 
   // Computer Vision
-  IMAGE_CLASSIFICATION  = 20;
-  OBJECT_DETECTION      = 21;
-  IMAGE_CAPTIONING      = 22;
-  DEPTH_ESTIMATION      = 23;
-  VIDEO_CLASSIFICATION  = 24;
-  IMAGE_SEGMENTATION    = 25;
+  IMAGE_CLASSIFICATION          = 20;
+  OBJECT_DETECTION              = 21;
+  IMAGE_CAPTIONING              = 22;
+  DEPTH_ESTIMATION              = 23;
+  VIDEO_CLASSIFICATION          = 24;
+  IMAGE_SEGMENTATION            = 25;
+  ZERO_SHOT_IMAGE_CLASSIFICATION = 26;
+  ZERO_SHOT_OBJECT_DETECTION    = 27;
+  MASK_GENERATION               = 28;
+  IMAGE_FEATURE_EXTRACTION      = 29;
+  KEYPOINT_MATCHING             = 30;
 
   // Multimodal
-  VISUAL_QA             = 30;
-  DOCUMENT_QA           = 31;
+  VISUAL_QA        = 40;
+  DOCUMENT_QA      = 41;
+  IMAGE_TEXT_TO_TEXT = 42;
+  ANY_TO_ANY       = 43;
 }
 
 message GreetRequest {

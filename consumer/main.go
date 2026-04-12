@@ -134,32 +134,44 @@ func (c *ConsumerClient) registerCommands(cp *processor.CommandProcessor) {
 
 var pipelineToTask = map[string][2]string{
 	// Audio
-	"automatic-speech-recognition": {"SPEECH_RECOGNITION",   "bytes"},
-	"audio-classification":         {"AUDIO_CLASSIFICATION",  "bytes"},
-	"text-to-speech":               {"TEXT_TO_SPEECH",        "text"},
-	"text-to-audio":                {"TEXT_TO_AUDIO",         "text"},
-	"keyword-spotting":             {"KEYWORD_SPOTTING",      "bytes"},
+	"automatic-speech-recognition":    {"SPEECH_RECOGNITION",             "bytes"},
+	"audio-classification":            {"AUDIO_CLASSIFICATION",            "bytes"},
+	"text-to-speech":                  {"TEXT_TO_SPEECH",                  "text"},
+	"text-to-audio":                   {"TEXT_TO_AUDIO",                   "text"},
+	"keyword-spotting":                {"KEYWORD_SPOTTING",                "bytes"},
+	"zero-shot-audio-classification":  {"ZERO_SHOT_AUDIO_CLASSIFICATION",  "bytes"},
 
 	// NLP
-	"text-generation":              {"TEXT_INFERENCE",        "text"},
-	"text2text-generation":         {"TEXT_INFERENCE",        "text"},
-	"summarization":                {"SUMMARIZATION",         "text"},
-	"translation":                  {"TRANSLATION",           "text"},
-	"question-answering":           {"QUESTION_ANSWERING",    "text"},
-	"text-classification":          {"TEXT_CLASSIFICATION",   "text"},
-	"fill-mask":                    {"FILL_MASK",             "text"},
+	"text-generation":         {"TEXT_INFERENCE",          "text"},
+	"text2text-generation":    {"TEXT_INFERENCE",          "text"},
+	"summarization":           {"SUMMARIZATION",           "text"},
+	"translation":             {"TRANSLATION",             "text"},
+	"question-answering":      {"QUESTION_ANSWERING",      "text"},
+	"text-classification":     {"TEXT_CLASSIFICATION",     "text"},
+	"fill-mask":               {"FILL_MASK",               "text"},
+	"token-classification":    {"TOKEN_CLASSIFICATION",    "text"},
+	"zero-shot-classification": {"ZERO_SHOT_CLASSIFICATION", "text"},
+	"table-question-answering": {"TABLE_QUESTION_ANSWERING", "text"},
+	"feature-extraction":      {"FEATURE_EXTRACTION",      "text"},
 
 	// Computer Vision
-	"image-classification":         {"IMAGE_CLASSIFICATION",  "bytes"},
-	"object-detection":             {"OBJECT_DETECTION",      "bytes"},
-	"image-to-text":                {"IMAGE_CAPTIONING",      "bytes"},
-	"depth-estimation":             {"DEPTH_ESTIMATION",      "bytes"},
-	"video-classification":         {"VIDEO_CLASSIFICATION",  "bytes"},
-	"image-segmentation":           {"IMAGE_SEGMENTATION",    "bytes"},
+	"image-classification":           {"IMAGE_CLASSIFICATION",           "bytes"},
+	"object-detection":               {"OBJECT_DETECTION",               "bytes"},
+	"image-to-text":                  {"IMAGE_CAPTIONING",               "bytes"},
+	"depth-estimation":               {"DEPTH_ESTIMATION",               "bytes"},
+	"video-classification":           {"VIDEO_CLASSIFICATION",           "bytes"},
+	"image-segmentation":             {"IMAGE_SEGMENTATION",             "bytes"},
+	"zero-shot-image-classification": {"ZERO_SHOT_IMAGE_CLASSIFICATION", "bytes"},
+	"zero-shot-object-detection":     {"ZERO_SHOT_OBJECT_DETECTION",     "bytes"},
+	"mask-generation":                {"MASK_GENERATION",                "bytes"},
+	"image-feature-extraction":       {"IMAGE_FEATURE_EXTRACTION",       "bytes"},
+	"keypoint-matching":              {"KEYPOINT_MATCHING",              "bytes"},
 
 	// Multimodal
-	"visual-question-answering":    {"VISUAL_QA",             "bytes"},
-	"document-question-answering":  {"DOCUMENT_QA",           "bytes"},
+	"visual-question-answering":   {"VISUAL_QA",          "bytes"},
+	"document-question-answering": {"DOCUMENT_QA",        "bytes"},
+	"image-text-to-text":          {"IMAGE_TEXT_TO_TEXT", "text or text|||image_path"},
+	"any-to-any":                  {"ANY_TO_ANY",         "bytes"},
 }
 
 func fetchModelTemplate(modelName string) (taskType, inputType string, err error) {
